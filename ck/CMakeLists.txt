@@ -1,3 +1,0 @@
-add_library(concurrency_kit INTERFACE)
-
-target_include_directories(concurrency_kit INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
