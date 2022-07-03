@@ -1,0 +1,3 @@
+add_library(concurrency_kit INTERFACE)
+
+target_include_directories(concurrency_kit INTERFACE ck/include)
