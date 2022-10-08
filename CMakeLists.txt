@@ -46,3 +46,7 @@ set_target_properties(glfw PROPERTIES Type "External")
 
 #Set up moody camel libs
 add_subdirectory(moodycamel)
+
+
+# Set up glm
+add_subdirectory(glm)
