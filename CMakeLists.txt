@@ -50,3 +50,5 @@ add_subdirectory(moodycamel)
 
 # Set up glm
 add_subdirectory(glm)
+
+add_subdirectory(DirectX-Headers)
