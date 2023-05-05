@@ -44,6 +44,10 @@ set_target_properties(glfw PROPERTIES Type "External")
 #SetTargetFlags(glfw)
 
 
+# Set up ImGui
+add_subdirectory(imgui)
+
+
 #Set up moody camel libs
 add_subdirectory(moodycamel)
 
