@@ -55,4 +55,13 @@ add_subdirectory(moodycamel)
 # Set up glm
 add_subdirectory(glm)
 
+
+# Set up DirectX hedears lib
 add_subdirectory(DirectX-Headers)
+
+
+# Set up RenderPipelineshaders
+set(RpsBuildExamples OFF)
+set(RpsBuildTests OFF)
+set(RpsBuildTools OFF)
+add_subdirectory(RenderPipelineShaders)
