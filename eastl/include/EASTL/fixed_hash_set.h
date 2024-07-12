@@ -75,7 +75,7 @@ namespace eastl
 												bucketCount + 1, 
 												sizeof(typename hash_set<Value, Hash, Predicate, OverflowAllocator, bCacheHashCode>::node_type), 
 												nodeCount, 
-												EASTL_ALIGN_OF(Value), 
+												EASTL_ALIGN_OF(typename hash_set<Value, Hash, Predicate, OverflowAllocator, bCacheHashCode>::node_type),
 												0,
 												bEnableOverflow,
 												OverflowAllocator>, 
@@ -83,8 +83,9 @@ namespace eastl
 	{
 	public:
 		typedef fixed_hashtable_allocator<bucketCount + 1, sizeof(typename hash_set<Value, Hash, Predicate, 
-						OverflowAllocator, bCacheHashCode>::node_type), nodeCount, EASTL_ALIGN_OF(Value), 0,
-						bEnableOverflow, OverflowAllocator>                                                                        fixed_allocator_type;
+						OverflowAllocator, bCacheHashCode>::node_type), nodeCount, 
+						EASTL_ALIGN_OF(typename hash_set<Value, Hash, Predicate, OverflowAllocator, bCacheHashCode>::node_type),
+						0,	bEnableOverflow, OverflowAllocator>                                                                    fixed_allocator_type;
 		typedef typename fixed_allocator_type::overflow_allocator_type                                                             overflow_allocator_type;
 		typedef fixed_hash_set<Value, nodeCount, bucketCount, bEnableOverflow, Hash, Predicate, bCacheHashCode, OverflowAllocator> this_type;
 		typedef hash_set<Value, Hash, Predicate, fixed_allocator_type, bCacheHashCode>                                             base_type;
@@ -94,9 +95,9 @@ namespace eastl
 
 		enum { kMaxSize = nodeCount };
 
+	protected:
 		using base_type::mAllocator;
 
-	protected:
 		node_type** mBucketBuffer[bucketCount + 1]; // '+1' because the hash table needs a null terminating bucket.
 		char        mNodeBuffer[fixed_allocator_type::kBufferSize]; // kBufferSize will take into account alignment requirements.
 
@@ -162,7 +163,7 @@ namespace eastl
 														bucketCount + 1, 
 														sizeof(typename hash_multiset<Value, Hash, Predicate, OverflowAllocator, bCacheHashCode>::node_type),
 														nodeCount,
-														EASTL_ALIGN_OF(Value), 
+														EASTL_ALIGN_OF(typename hash_multiset<Value, Hash, Predicate, OverflowAllocator, bCacheHashCode>::node_type),
 														0, 
 														bEnableOverflow,
 														OverflowAllocator>,
@@ -170,7 +171,8 @@ namespace eastl
 	{
 	public:
 		typedef fixed_hashtable_allocator<bucketCount + 1, sizeof(typename hash_multiset<Value, Hash, Predicate, 
-					OverflowAllocator, bCacheHashCode>::node_type), nodeCount, EASTL_ALIGN_OF(Value), 0,
+					OverflowAllocator, bCacheHashCode>::node_type), nodeCount, EASTL_ALIGN_OF(typename hash_multiset<Value, Hash, Predicate,
+					OverflowAllocator, bCacheHashCode>::node_type), 0,
 					bEnableOverflow, OverflowAllocator>                                                                                 fixed_allocator_type;
 		typedef typename fixed_allocator_type::overflow_allocator_type                                                                  overflow_allocator_type;
 		typedef hash_multiset<Value, Hash, Predicate, fixed_allocator_type, bCacheHashCode>                                             base_type;
@@ -181,9 +183,9 @@ namespace eastl
 
 		enum { kMaxSize = nodeCount };
 
+	protected:
 		using base_type::mAllocator;
 
-	protected:
 		node_type** mBucketBuffer[bucketCount + 1]; // '+1' because the hash table needs a null terminating bucket.
 		char        mNodeBuffer[fixed_allocator_type::kBufferSize]; // kBufferSize will take into account alignment requirements.
 
@@ -238,11 +240,13 @@ namespace eastl
 	{
 		EASTL_CT_ASSERT((nodeCount >= 1) && (bucketCount >= 2));
 
-		if(!bEnableOverflow)
+		if (!bEnableOverflow)
+		{
 			base_type::set_max_load_factor(10000.f); // Set it so that we will never resize.
+		}	
 
 		#if EASTL_NAME_ENABLED
-			mAllocator.set_name(EASTL_FIXED_HASH_SET_DEFAULT_NAME);
+		mAllocator.set_name(EASTL_FIXED_HASH_SET_DEFAULT_NAME);
 		#endif
 
 		mAllocator.reset(mNodeBuffer);
@@ -262,7 +266,7 @@ namespace eastl
 			base_type::set_max_load_factor(10000.f); // Set it so that we will never resize.
 
 		#if EASTL_NAME_ENABLED
-			mAllocator.set_name(EASTL_FIXED_HASH_SET_DEFAULT_NAME);
+		mAllocator.set_name(EASTL_FIXED_HASH_SET_DEFAULT_NAME);
 		#endif
 
 		mAllocator.reset(mNodeBuffer);
@@ -279,11 +283,13 @@ namespace eastl
 	{
 		EASTL_CT_ASSERT((nodeCount >= 1) && (bucketCount >= 2));
 
-		if(!bEnableOverflow)
+		if (!bEnableOverflow)
+		{
 			base_type::set_max_load_factor(10000.f); // Set it so that we will never resize.
+		}
 
 		#if EASTL_NAME_ENABLED
-			mAllocator.set_name(EASTL_FIXED_HASH_SET_DEFAULT_NAME);
+		mAllocator.set_name(EASTL_FIXED_HASH_SET_DEFAULT_NAME);
 		#endif
 
 		mAllocator.reset(mNodeBuffer);
@@ -302,10 +308,12 @@ namespace eastl
 		EASTL_CT_ASSERT((nodeCount >= 1) && (bucketCount >= 2));
 
 		if(!bEnableOverflow)
+		{
 			base_type::set_max_load_factor(10000.f); // Set it so that we will never resize.
+		}
 
 		#if EASTL_NAME_ENABLED
-			mAllocator.set_name(EASTL_FIXED_HASH_SET_DEFAULT_NAME);
+		mAllocator.set_name(EASTL_FIXED_HASH_SET_DEFAULT_NAME);
 		#endif
 
 		mAllocator.reset(mNodeBuffer);
@@ -317,12 +325,12 @@ namespace eastl
 	inline fixed_hash_set<Value, nodeCount, bucketCount, bEnableOverflow, Hash, Predicate, bCacheHashCode, OverflowAllocator>::
 	fixed_hash_set(const this_type& x)
 		: base_type(prime_rehash_policy::GetPrevBucketCountOnly(bucketCount), x.hash_function(),
-					x.equal_function(), fixed_allocator_type(NULL, mBucketBuffer))
+					x.key_eq(), fixed_allocator_type(NULL, mBucketBuffer))
 	{
 		mAllocator.copy_overflow_allocator(x.mAllocator);
 
 		#if EASTL_NAME_ENABLED
-			mAllocator.set_name(x.mAllocator.get_name());
+		mAllocator.set_name(x.mAllocator.get_name());
 		#endif
 
 		EASTL_CT_ASSERT((nodeCount >= 1) && (bucketCount >= 2));
@@ -338,13 +346,13 @@ namespace eastl
 	template <typename Key, size_t nodeCount, size_t bucketCount, bool bEnableOverflow, typename Hash, typename Predicate, bool bCacheHashCode, typename OverflowAllocator>
 	inline fixed_hash_set<Key, nodeCount, bucketCount, bEnableOverflow, Hash, Predicate, bCacheHashCode, OverflowAllocator>::fixed_hash_set(this_type&& x)
 	: base_type(prime_rehash_policy::GetPrevBucketCountOnly(bucketCount), x.hash_function(),
-					x.equal_function(), fixed_allocator_type(NULL, mBucketBuffer))
+					x.key_eq(), fixed_allocator_type(NULL, mBucketBuffer))
 	{
 		// This implementation is the same as above. If we could rely on using C++11 delegating constructor support then we could just call that here.
 		mAllocator.copy_overflow_allocator(x.mAllocator);
 
 		#if EASTL_NAME_ENABLED
-			mAllocator.set_name(x.mAllocator.get_name());
+		mAllocator.set_name(x.mAllocator.get_name());
 		#endif
 
 		EASTL_CT_ASSERT((nodeCount >= 1) && (bucketCount >= 2));
@@ -360,13 +368,13 @@ namespace eastl
 	template <typename Key, size_t nodeCount, size_t bucketCount, bool bEnableOverflow, typename Hash, typename Predicate, bool bCacheHashCode, typename OverflowAllocator>
 	inline fixed_hash_set<Key, nodeCount, bucketCount, bEnableOverflow, Hash, Predicate, bCacheHashCode, OverflowAllocator>::fixed_hash_set(this_type&& x, const overflow_allocator_type& overflowAllocator)
 		: base_type(prime_rehash_policy::GetPrevBucketCountOnly(bucketCount), 
-					x.hash_function(), x.equal_function(), fixed_allocator_type(NULL, mBucketBuffer, overflowAllocator))
+					x.hash_function(), x.key_eq(), fixed_allocator_type(NULL, mBucketBuffer, overflowAllocator))
 	{
 		// This implementation is the same as above. If we could rely on using C++11 delegating constructor support then we could just call that here.
 		mAllocator.copy_overflow_allocator(x.mAllocator);
 
 		#if EASTL_NAME_ENABLED
-			mAllocator.set_name(x.mAllocator.get_name());
+		mAllocator.set_name(x.mAllocator.get_name());
 		#endif
 
 		EASTL_CT_ASSERT((nodeCount >= 1) && (bucketCount >= 2));
@@ -391,7 +399,7 @@ namespace eastl
 			base_type::set_max_load_factor(10000.f); // Set it so that we will never resize.
 
 		#if EASTL_NAME_ENABLED
-			mAllocator.set_name(EASTL_FIXED_HASH_SET_DEFAULT_NAME);
+		mAllocator.set_name(EASTL_FIXED_HASH_SET_DEFAULT_NAME);
 		#endif
 
 		mAllocator.reset(mNodeBuffer);
@@ -515,7 +523,7 @@ namespace eastl
 			base_type::set_max_load_factor(10000.f); // Set it so that we will never resize.
 
 		#if EASTL_NAME_ENABLED
-			mAllocator.set_name(EASTL_FIXED_HASH_MULTISET_DEFAULT_NAME);
+		mAllocator.set_name(EASTL_FIXED_HASH_MULTISET_DEFAULT_NAME);
 		#endif
 
 		mAllocator.reset(mNodeBuffer);
@@ -535,7 +543,7 @@ namespace eastl
 			base_type::set_max_load_factor(10000.f); // Set it so that we will never resize.
 
 		#if EASTL_NAME_ENABLED
-			mAllocator.set_name(EASTL_FIXED_HASH_MULTISET_DEFAULT_NAME);
+		mAllocator.set_name(EASTL_FIXED_HASH_MULTISET_DEFAULT_NAME);
 		#endif
 
 		mAllocator.reset(mNodeBuffer);
@@ -556,7 +564,7 @@ namespace eastl
 			base_type::set_max_load_factor(10000.f); // Set it so that we will never resize.
 
 		#if EASTL_NAME_ENABLED
-			mAllocator.set_name(EASTL_FIXED_HASH_MULTISET_DEFAULT_NAME);
+		mAllocator.set_name(EASTL_FIXED_HASH_MULTISET_DEFAULT_NAME);
 		#endif
 
 		mAllocator.reset(mNodeBuffer);
@@ -578,7 +586,7 @@ namespace eastl
 			base_type::set_max_load_factor(10000.f); // Set it so that we will never resize.
 
 		#if EASTL_NAME_ENABLED
-			mAllocator.set_name(EASTL_FIXED_HASH_MULTISET_DEFAULT_NAME);
+		mAllocator.set_name(EASTL_FIXED_HASH_MULTISET_DEFAULT_NAME);
 		#endif
 
 		mAllocator.reset(mNodeBuffer);
@@ -590,12 +598,12 @@ namespace eastl
 	inline fixed_hash_multiset<Value, nodeCount, bucketCount, bEnableOverflow, Hash, Predicate, bCacheHashCode, OverflowAllocator>::
 	fixed_hash_multiset(const this_type& x)
 		: base_type(prime_rehash_policy::GetPrevBucketCountOnly(bucketCount), x.hash_function(), 
-					x.equal_function(), fixed_allocator_type(NULL, mBucketBuffer))
+					x.key_eq(), fixed_allocator_type(NULL, mBucketBuffer))
 	{
 		mAllocator.copy_overflow_allocator(x.mAllocator);
 
 		#if EASTL_NAME_ENABLED
-			mAllocator.set_name(x.mAllocator.get_name());
+		mAllocator.set_name(x.mAllocator.get_name());
 		#endif
 
 		EASTL_CT_ASSERT((nodeCount >= 1) && (bucketCount >= 2));
@@ -611,13 +619,13 @@ namespace eastl
 	template <typename Key, size_t nodeCount, size_t bucketCount, bool bEnableOverflow, typename Hash, typename Predicate, bool bCacheHashCode, typename OverflowAllocator>
 	inline fixed_hash_multiset<Key, nodeCount, bucketCount, bEnableOverflow, Hash, Predicate, bCacheHashCode, OverflowAllocator>::fixed_hash_multiset(this_type&& x)
 		: base_type(prime_rehash_policy::GetPrevBucketCountOnly(bucketCount), x.hash_function(),
-						x.equal_function(), fixed_allocator_type(NULL, mBucketBuffer))
+						x.key_eq(), fixed_allocator_type(NULL, mBucketBuffer))
 	{
 		// This implementation is the same as above. If we could rely on using C++11 delegating constructor support then we could just call that here.
 		mAllocator.copy_overflow_allocator(x.mAllocator);
 
 		#if EASTL_NAME_ENABLED
-			mAllocator.set_name(x.mAllocator.get_name());
+		mAllocator.set_name(x.mAllocator.get_name());
 		#endif
 
 		EASTL_CT_ASSERT((nodeCount >= 1) && (bucketCount >= 2));
@@ -633,13 +641,13 @@ namespace eastl
 	template <typename Key, size_t nodeCount, size_t bucketCount, bool bEnableOverflow, typename Hash, typename Predicate, bool bCacheHashCode, typename OverflowAllocator>
 	inline fixed_hash_multiset<Key, nodeCount, bucketCount, bEnableOverflow, Hash, Predicate, bCacheHashCode, OverflowAllocator>::fixed_hash_multiset(this_type&& x, const overflow_allocator_type& overflowAllocator)
 		: base_type(prime_rehash_policy::GetPrevBucketCountOnly(bucketCount), 
-					x.hash_function(), x.equal_function(), fixed_allocator_type(NULL, mBucketBuffer, overflowAllocator))
+					x.hash_function(), x.key_eq(), fixed_allocator_type(NULL, mBucketBuffer, overflowAllocator))
 	{
 		// This implementation is the same as above. If we could rely on using C++11 delegating constructor support then we could just call that here.
 		mAllocator.copy_overflow_allocator(x.mAllocator);
 
 		#if EASTL_NAME_ENABLED
-			mAllocator.set_name(x.mAllocator.get_name());
+		mAllocator.set_name(x.mAllocator.get_name());
 		#endif
 
 		EASTL_CT_ASSERT((nodeCount >= 1) && (bucketCount >= 2));
@@ -664,7 +672,7 @@ namespace eastl
 			base_type::set_max_load_factor(10000.f); // Set it so that we will never resize.
 
 		#if EASTL_NAME_ENABLED
-			mAllocator.set_name(EASTL_FIXED_HASH_MULTISET_DEFAULT_NAME);
+		mAllocator.set_name(EASTL_FIXED_HASH_MULTISET_DEFAULT_NAME);
 		#endif
 
 		mAllocator.reset(mNodeBuffer);

@@ -11,11 +11,19 @@
 #endif
 
 
-#include "atomic_push_compiler_options.h"
-
-
 namespace eastl
 {
+
+
+// 'class' : multiple assignment operators specified
+EA_DISABLE_VC_WARNING(4522);
+
+// misaligned atomic operation may incur significant performance penalty
+// The above warning is emitted in earlier versions of clang incorrectly.
+// All eastl::atomic<T> objects are size aligned.
+// This is static and runtime asserted.
+// Thus we disable this warning.
+EA_DISABLE_CLANG_WARNING(-Watomic-alignment);
 
 
 class atomic_flag
@@ -42,13 +50,13 @@ public: /* deleted ctors && assignment operators */
 public: /* clear */
 
 	template <typename Order>
-	void clear(Order order) volatile EA_NOEXCEPT
+	void clear(Order /*order*/) volatile EA_NOEXCEPT
 	{
 		EASTL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(Order);
 	}
 
 	template <typename Order>
-	void clear(Order order) EA_NOEXCEPT
+	void clear(Order /*order*/) EA_NOEXCEPT
 	{
 		EASTL_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
 	}
@@ -76,14 +84,14 @@ public: /* clear */
 public: /* test_and_set */
 
 	template <typename Order>
-	bool test_and_set(Order order) volatile EA_NOEXCEPT
+	bool test_and_set(Order /*order*/) volatile EA_NOEXCEPT
 	{
 		EASTL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(Order);
 		return false;
 	}
 
 	template <typename Order>
-	bool test_and_set(Order order) EA_NOEXCEPT
+	bool test_and_set(Order /*order*/) EA_NOEXCEPT
 	{
 		EASTL_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
 		return false;
@@ -122,14 +130,14 @@ public: /* test_and_set */
 public: /* test */
 
 	template <typename Order>
-	bool test(Order order) const volatile EA_NOEXCEPT
+	bool test(Order /*order*/) const volatile EA_NOEXCEPT
 	{
 		EASTL_ATOMIC_STATIC_ASSERT_VOLATILE_MEM_FN(Order);
 		return false;
 	}
 
 	template <typename Order>
-	bool test(Order order) const EA_NOEXCEPT
+	bool test(Order /*order*/) const EA_NOEXCEPT
 	{
 		EASTL_ATOMIC_STATIC_ASSERT_INVALID_MEMORY_ORDER(Order);
 		return false;
@@ -160,11 +168,11 @@ private:
 	eastl::atomic<bool> mFlag;
 };
 
+EA_RESTORE_VC_WARNING();
+
+EA_RESTORE_CLANG_WARNING();
+
 
 } // namespace eastl
-
-
-#include "atomic_pop_compiler_options.h"
-
 
 #endif /* EASTL_ATOMIC_INTERNA_ATOMIC_FLAG_H */

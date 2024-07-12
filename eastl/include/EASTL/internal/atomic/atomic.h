@@ -48,9 +48,6 @@
  */
 
 
-#include "atomic_push_compiler_options.h"
-
-
 namespace eastl
 {
 
@@ -59,10 +56,21 @@ namespace internal
 {
 
 
+// 'class' : multiple assignment operators specified
+EA_DISABLE_VC_WARNING(4522);
+
+// misaligned atomic operation may incur significant performance penalty
+// The above warning is emitted in earlier versions of clang incorrectly.
+// All eastl::atomic<T> objects are size aligned.
+// This is static and runtime asserted.
+// Thus we disable this warning.
+EA_DISABLE_CLANG_WARNING(-Watomic-alignment);
+
+
 	template <typename T>
 	struct is_atomic_lockfree_size
 	{
-		static EASTL_CPP17_INLINE_VARIABLE constexpr bool value = false ||
+		static EASTL_CPP17_INLINE_VARIABLE EA_CONSTEXPR_OR_CONST bool value = false ||
 		#if defined(EASTL_ATOMIC_HAS_8BIT)
 			sizeof(T) == 1 ||
 		#endif
@@ -85,7 +93,7 @@ namespace internal
 	template <typename T>
 	struct is_user_type_suitable_for_primary_template
 	{
-		static EASTL_CPP17_INLINE_VARIABLE constexpr bool value = eastl::internal::is_atomic_lockfree_size<T>::value;
+		static EASTL_CPP17_INLINE_VARIABLE EA_CONSTEXPR_OR_CONST bool value = eastl::internal::is_atomic_lockfree_size<T>::value;
 	};
 
 
@@ -116,7 +124,7 @@ namespace internal
 																		\
 	public:																\
 																		\
-		static EASTL_CPP17_INLINE_VARIABLE constexpr bool is_always_lock_free = eastl::internal::is_atomic_lockfree_size<type>::value; \
+		static EASTL_CPP17_INLINE_VARIABLE EA_CONSTEXPR_OR_CONST bool is_always_lock_free = eastl::internal::is_atomic_lockfree_size<type>::value; \
 																		\
 	public: /* deleted ctors && assignment operators */					\
 																		\
@@ -243,10 +251,10 @@ struct atomic<T*> : protected eastl::internal::atomic_pointer_width<T*>
 };
 
 
+EA_RESTORE_VC_WARNING();
+
+EA_RESTORE_CLANG_WARNING();
+
 } // namespace eastl
-
-
-#include "atomic_pop_compiler_options.h"
-
 
 #endif /* EASTL_ATOMIC_INTERNAL_H */
