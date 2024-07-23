@@ -15,21 +15,25 @@ set(ImGuiVkSrc
         backends/imgui_impl_glfw.cpp backends/imgui_impl_glfw.h
         backends/imgui_impl_vulkan.cpp backends/imgui_impl_vulkan.h)
 
-set(ImGuiVkSrc
+set(ImGuiDx12Src
         backends/imgui_impl_glfw.cpp backends/imgui_impl_glfw.h
         backends/imgui_impl_dx12.cpp backends/imgui_impl_dx12.h)
 
-if (GraphicsApi STREQUAL "VK")
-    set(ImGuiSrc ${ImGuiBaseSrc} ${ImGuiVkSrc})
-elseif (GraphicsApi STREQUAL "DX12")
-    set(ImGuiSrc ${ImGuiBaseSrc} ${ImGuiDx12Src})
-endif()
+add_library(DearImgui STATIC ${ImGuiBaseSrc})
+target_include_directories(DearImgui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+set_property(TARGET DearImgui PROPERTY Type "External")
 
-add_library(DearIMGUI STATIC ${ImGuiSrc})
+add_library(DearImguiVk STATIC ${ImGuiVkSrc})
+target_include_directories(DearImguiVk PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+set_property(TARGET DearImguiVk PROPERTY Type "External")
 
-target_link_libraries(DearIMGUI glfw)
+add_library(DearImguiDx12 STATIC ${ImGuiDx12Src})
+target_include_directories(DearImguiDx12 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+set_property(TARGET DearImguiDx12 PROPERTY Type "External")
 
-set_property(TARGET DearIMGUI PROPERTY Type "External")
+target_link_libraries(DearImguiVk DearImgui glfw)
+target_link_libraries(DearImguiDx12 DearImgui glfw)
+
 #SetTargetFlags(DearIMGUI)
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
