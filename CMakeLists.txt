@@ -67,3 +67,9 @@ set(RpsBuildTools OFF)
 add_subdirectory(RenderPipelineShaders)
 target_include_directories(rps_runtime_vk PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/RenderPipelineShaders/include")
 target_include_directories(rps_runtime_d3d12 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/RenderPipelineShaders/include")
+
+# Set up DX12MemoryAllocator
+add_subdirectory(DirectX12MemoryAllocator)
+
+# Set up VulkanMemoryAllocator
+add_subdirectory(VulkanMemoryAllocator)
