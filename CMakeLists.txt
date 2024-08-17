@@ -73,3 +73,8 @@ add_subdirectory(DirectX12MemoryAllocator)
 
 # Set up VulkanMemoryAllocator
 add_subdirectory(VulkanMemoryAllocator)
+
+# Set up tracy
+option (TRACY_ENABLE "" ON)
+add_subdirectory(tracy-0.11.0)
+#add_subdirectory(tracy-0.11.0/capture)
