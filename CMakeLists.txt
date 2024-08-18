@@ -61,10 +61,12 @@ add_subdirectory(DirectX-Headers)
 
 
 # Set up RenderPipelineshaders
-#set(RpsBuildExamples OFF)
-#set(RpsBuildTests OFF)
-#set(RpsBuildTools OFF)
-#add_subdirectory(RenderPipelineShaders)
+set(RpsBuildImGui OFF)
+set(RpsEnableVulkan OFF)
+set(RpsEnableDXAgilitySDK OFF)
+add_subdirectory(RenderPipelineShaders)
+target_include_directories(rps_runtime PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/RenderPipelineShaders/include")
+target_include_directories(rps_runtime PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/RenderPipelineShaders/src")
 #target_include_directories(rps_runtime_vk PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/RenderPipelineShaders/include")
 #target_include_directories(rps_runtime_d3d12 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/RenderPipelineShaders/include")
 
