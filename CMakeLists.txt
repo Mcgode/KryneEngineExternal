@@ -81,3 +81,7 @@ set(TRACY_ENABLE ON)
 set(TRACY_FIBERS ON)
 add_subdirectory(tracy-0.11.0)
 #add_subdirectory(tracy-0.11.0/capture)
+
+# Set up Google Test
+set(INSTALL_GTEST OFF)
+add_subdirectory(googletest)
