@@ -744,7 +744,7 @@ namespace rps
                             bool bFirstTimeAsSrc = !aliasingSrcBitMask.ExchangeBit(srcResourceIdx, true);
                             if (bFirstTimeAsSrc)
                             {
-                                pAliasingInfo->srcDeactivating = RPS_TRUE;
+                                pAliasingInfo->srcDeactivating = RpsBool(RPS_TRUE);
                                 numDeactivatedRes++;
                             }
 
@@ -798,7 +798,7 @@ namespace rps
                         RPS_ASSERT(!aliasingInfos.empty());
                         RPS_ASSERT(aliasingInfos.back().dstResourceIndex == resIndex);
 
-                        aliasingInfos.back().dstActivating = RPS_TRUE;
+                        aliasingInfos.back().dstActivating = RpsBool(RPS_TRUE);
                         numAliasingRes++;
                     }
                 }
@@ -830,7 +830,7 @@ namespace rps
                     pPreambleAliasingInfo->srcResourceIndex     = RPS_RESOURCE_ID_INVALID;
                     pPreambleAliasingInfo->dstResourceIndex     = pendingAliasingSrcResIdx;
                     pPreambleAliasingInfo->srcDeactivating      = RPS_FALSE;
-                    pPreambleAliasingInfo->dstActivating        = RPS_TRUE;
+                    pPreambleAliasingInfo->dstActivating        = RpsBool(RPS_TRUE);
                 }
             }
 

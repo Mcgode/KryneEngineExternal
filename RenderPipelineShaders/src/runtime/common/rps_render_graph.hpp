@@ -35,8 +35,8 @@ namespace rps
     {
         uint32_t srcResourceIndex;
         uint32_t dstResourceIndex;
-        RpsBool  srcDeactivating : 1;
-        RpsBool  dstActivating : 1;
+        RpsBool  srcDeactivating : 2;
+        RpsBool  dstActivating : 2;
     };
 
     struct FinalAccessInfo
