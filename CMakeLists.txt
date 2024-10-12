@@ -77,11 +77,11 @@ add_subdirectory(DirectX12MemoryAllocator)
 add_subdirectory(VulkanMemoryAllocator)
 
 # Set up tracy
-set(TRACY_ENABLE ON)
-set(TRACY_FIBERS ON)
+set(TRACY_ENABLE ON CACHE BOOL "Enable tracy" FORCE)
+set(TRACY_FIBERS ON CACHE BOOL "Enable tracy fibers" FORCE)
 add_subdirectory(tracy-0.11.0)
 #add_subdirectory(tracy-0.11.0/capture)
 
 # Set up Google Test
-set(INSTALL_GTEST OFF)
+set(INSTALL_GTEST OFF CACHE BOOL "Install GTest" FORCE)
 add_subdirectory(googletest)
