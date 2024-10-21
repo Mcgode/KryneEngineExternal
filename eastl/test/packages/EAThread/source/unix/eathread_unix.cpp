@@ -435,9 +435,9 @@
 					{
 						// Mac OS X does not expose the length limit of the name, so hardcode it.
 						char8_t nameBuf[63]; // It is not clear what the size limit actually is, though 63 is known to work because it was seen on the Internet.
-						strncpy(nameBuf, pName, sizeof(nameBuf));
+						strncpy(reinterpret_cast<char*>(nameBuf), reinterpret_cast<const char*>(pName), sizeof(nameBuf));
 						nameBuf[62] = 0;
-						pthread_setname_np_ptr(nameBuf);
+						pthread_setname_np_ptr(reinterpret_cast<const char*>(nameBuf));
 					}
 
 				#elif defined(EA_PLATFORM_BSD) || defined(EA_PLATFORM_CONSOLE_BSD) || defined(__FreeBSD__)
@@ -465,7 +465,7 @@
 				// only if the currently executing thread is the one that is associated with
 				// this class object.
 				if(GetId(pTDD) == EA::Thread::GetThreadId())
-					SetCurrentThreadName(pTDD->mName);
+					SetCurrentThreadName(reinterpret_cast<const char8_t*>(pTDD->mName));
 
 			#elif defined(EA_PLATFORM_BSD) 
 				EAT_COMPILETIME_ASSERT(EATHREAD_OTHER_THREAD_NAMING_SUPPORTED == 1);
