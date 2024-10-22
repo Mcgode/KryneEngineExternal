@@ -1,0 +1,8 @@
+add_subdirectory(config-boost-1.86.0)
+add_subdirectory(assert-boost-1.86.0)
+add_subdirectory(core-boost-1.86.0)
+add_subdirectory(mp11-boost-1.86.0)
+add_subdirectory(pool-boost-1.86.0)
+add_subdirectory(predef-boost-1.86.0)
+add_subdirectory(smart_ptr-boost-1.86.0)
+add_subdirectory(context-boost-1.86.0)

@@ -89,3 +89,6 @@ add_subdirectory(tracy-0.11.0)
 # Set up Google Test
 set(INSTALL_GTEST OFF CACHE BOOL "Install GTest" FORCE)
 add_subdirectory(googletest)
+
+# Set up boost
+add_subdirectory(boost)
