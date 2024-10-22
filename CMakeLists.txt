@@ -71,10 +71,14 @@ target_include_directories(rps_runtime PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Rende
 #target_include_directories(rps_runtime_d3d12 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/RenderPipelineShaders/include")
 
 # Set up DX12MemoryAllocator
-add_subdirectory(DirectX12MemoryAllocator)
+if (GraphicsApi STREQUAL "DX12")
+    add_subdirectory(DirectX12MemoryAllocator)
+endif ()
 
 # Set up VulkanMemoryAllocator
-add_subdirectory(VulkanMemoryAllocator)
+if (GraphicsApi STREQUAL "VK")
+    add_subdirectory(VulkanMemoryAllocator)
+endif ()
 
 # Set up tracy
 set(TRACY_ENABLE ON CACHE BOOL "Enable tracy" FORCE)
