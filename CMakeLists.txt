@@ -96,3 +96,7 @@ add_subdirectory(googletest)
 
 # Set up boost
 add_subdirectory(boost)
+
+if (GraphicsApi STREQUAL "MTL")
+    add_subdirectory(MetalCpp)
+endif ()
