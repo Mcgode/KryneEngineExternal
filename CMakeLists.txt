@@ -98,5 +98,6 @@ add_subdirectory(googletest)
 add_subdirectory(boost)
 
 if (GraphicsApi STREQUAL "MTL")
-    add_subdirectory(MetalCpp)
+    add_subdirectory(metal-cpp)
+    add_subdirectory(metal-cpp-extensions)
 endif ()
