@@ -61,18 +61,10 @@ add_subdirectory(glm)
 
 
 # Set up DirectX hedears lib
-add_subdirectory(DirectX-Headers)
+if (GraphicsApi STREQUAL "DX12")
+    add_subdirectory(DirectX-Headers)
+endif ()
 
-
-# Set up RenderPipelineshaders
-set(RpsBuildImGui OFF)
-set(RpsEnableVulkan OFF)
-set(RpsEnableDXAgilitySDK OFF)
-add_subdirectory(RenderPipelineShaders)
-target_include_directories(rps_runtime PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/RenderPipelineShaders/include")
-target_include_directories(rps_runtime PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/RenderPipelineShaders/src")
-#target_include_directories(rps_runtime_vk PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/RenderPipelineShaders/include")
-#target_include_directories(rps_runtime_d3d12 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/RenderPipelineShaders/include")
 
 # Set up DX12MemoryAllocator
 if (GraphicsApi STREQUAL "DX12")
