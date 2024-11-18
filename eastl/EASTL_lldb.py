@@ -30,6 +30,8 @@ def __lldb_init_module(debugger, internal_dict):
     addSummary("eastl::fixed_vector<.*>", vector_base_summary.__name__)
     addSytheticChildrenProvider("eastl::fixed_vector<.*>", VectorBaseChildrenProvider.__name__)
 
+    addSummary("eastl::function<.*>", function_summary.__name__)
+
     debugger.HandleCommand("type category enable eastl")
 
 def unique_ptr_summary(value_object, internal_dict):
@@ -157,3 +159,11 @@ class VectorBaseChildrenProvider:
         else:
             offset = self.data_size * (index - 2)
             return self.mp_begin.CreateChildAtOffset(f"[{index - 2}]", offset, self.data_type)
+
+def function_summary(value_object, internal_dict):
+    member = value_object.GetChildMemberWithName("mInvokeFuncPtr")
+    if value_object.GetChildMemberWithName("mMgrFuncPtr").GetValueAsUnsigned() == 0:
+        return "empty"
+    else:
+        member = value_object.GetChildMemberWithName("mInvokeFuncPtr")
+        return f"{member.GetSummary()}"
