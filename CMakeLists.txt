@@ -93,3 +93,6 @@ if (GraphicsApi STREQUAL "MTL")
     add_subdirectory(metal-cpp)
     add_subdirectory(metal-cpp-extensions)
 endif ()
+
+# Set up xsimd
+add_subdirectory(xsimd)
