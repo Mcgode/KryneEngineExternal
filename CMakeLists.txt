@@ -96,3 +96,9 @@ endif ()
 
 # Set up xsimd
 add_subdirectory(xsimd)
+
+# Set up Assimp
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build package with shared libraries." FORCE)
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "If the test suite for Assimp is built in addition to the library." FORCE)
+set(ASSIMP_INSTALL OFF CACHE BOOL "Disable this if you want to use assimp as a submodule." FORCE)
+add_subdirectory(assimp-5.4.3)
