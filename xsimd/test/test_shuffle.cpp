@@ -605,6 +605,25 @@ struct shuffle_test
         }
     }
 
+    void transpose()
+    {
+        B b_lhs = B::load_unaligned(lhs.data());
+        std::array<B, size> b_matrix;
+        for (size_t i = 0; i < size; ++i)
+            b_matrix[i] = b_lhs;
+        std::array<value_type, size * size> ref_matrix;
+        for (size_t i = 0; i < size; ++i)
+            for (size_t j = 0; j < size; ++j)
+                ref_matrix[i * size + j] = lhs[i];
+
+        INFO("transpose");
+        xsimd::transpose(b_matrix.data(), b_matrix.data() + b_matrix.size());
+        for (size_t i = 0; i < size; ++i)
+        {
+            CHECK_BATCH_EQ(b_matrix[i], B::load_unaligned(&ref_matrix[i * size]));
+        }
+    }
+
     void select()
     {
         B b_lhs = B::load_unaligned(lhs.data());
@@ -694,10 +713,34 @@ TEST_CASE_TEMPLATE("[shuffle]", B, BATCH_FLOAT_TYPES, xsimd::batch<uint32_t>, xs
     {
         Test.swizzle();
     }
+    SUBCASE("transpose")
+    {
+        Test.transpose();
+    }
     SUBCASE("zip")
     {
         Test.zip();
     }
 }
+
+TEST_CASE_TEMPLATE("[small integer transpose]", B, xsimd::batch<uint16_t>, xsimd::batch<int16_t>, xsimd::batch<uint8_t>, xsimd::batch<int8_t>)
+{
+    shuffle_test<B> Test;
+    SUBCASE("transpose")
+    {
+        Test.transpose();
+    }
+}
+
+#if (XSIMD_WITH_SSE2 && !XSIMD_WITH_AVX)
+TEST_CASE_TEMPLATE("[small integer swizzle]", B, xsimd::batch<uint16_t>, xsimd::batch<int16_t>)
+{
+    shuffle_test<B> Test;
+    SUBCASE("swizzle")
+    {
+        Test.swizzle();
+    }
+}
+#endif
 
 #endif

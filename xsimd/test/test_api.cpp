@@ -12,6 +12,8 @@
 #include "xsimd/xsimd.hpp"
 #ifndef XSIMD_NO_SUPPORTED_ARCHITECTURE
 
+#include <functional>
+#include <numeric>
 #include <random>
 
 #include "test_utils.hpp"
@@ -20,6 +22,8 @@ template <class B>
 struct xsimd_api_test
 {
     using batch_type = B;
+    using batch_bool_type = typename B::batch_bool_type;
+    using arch_type = typename B::arch_type;
     using value_type = typename B::value_type;
     static constexpr size_t size = B::size;
     using array_type = std::array<value_type, size>;
@@ -81,22 +85,23 @@ struct xsimd_api_test
 
     void test_store()
     {
-        test_store_impl(i8_vec, "load int8_t");
-        test_store_impl(ui8_vec, "load uint8_t");
-        test_store_impl(i16_vec, "load int16_t");
-        test_store_impl(ui16_vec, "load uint16_t");
-        test_store_impl(i32_vec, "load int32_t");
-        test_store_impl(ui32_vec, "load uint32_t");
-        test_store_impl(i64_vec, "load int64_t");
-        test_store_impl(ui64_vec, "load uint64_t");
-        test_store_impl(f_vec, "load float");
+        test_store_impl(i8_vec, "store int8_t");
+        test_store_impl(ui8_vec, "store uint8_t");
+        test_store_impl(i16_vec, "store int16_t");
+        test_store_impl(ui16_vec, "store uint16_t");
+        test_store_impl(i32_vec, "store int32_t");
+        test_store_impl(ui32_vec, "store uint32_t");
+        test_store_impl(i64_vec, "store int64_t");
+        test_store_impl(ui64_vec, "store uint64_t");
+        test_store_impl(f_vec, "store float");
 #if XSIMD_WITH_NEON64 || !XSIMD_WITH_NEON
-        test_store_impl(d_vec, "load double");
+        test_store_impl(d_vec, "store double");
 #endif
     }
 
     void test_set()
     {
+        test_set_bool("set bool");
         test_set_impl<int8_t>("set int8_t");
         test_set_impl<uint8_t>("set uint8_t");
         test_set_impl<int16_t>("set int16_t");
@@ -133,13 +138,29 @@ private:
         batch_type b = batch_type::load(v.data(), xsimd::aligned_mode());
         V res(size);
 
+        bool* b_data = new bool[size];
+
         xsimd::store_as(res.data(), b, xsimd::unaligned_mode());
         INFO(name, " unaligned");
         CHECK_VECTOR_EQ(res, v);
 
+        std::fill(b_data, b_data + size, false);
+        batch_bool_type bb = (b == b);
+        xsimd::store_as(b_data, bb, xsimd::unaligned_mode());
+        INFO(name, " batch_bool unaligned");
+        CHECK_UNARY(std::accumulate(b_data, b_data + size, true, std::logical_and<bool>()));
+
         xsimd::store_as(res.data(), b, xsimd::aligned_mode());
         INFO(name, " aligned");
         CHECK_VECTOR_EQ(res, v);
+
+        std::fill(b_data, b_data + size, false);
+        bb = (b == b);
+        xsimd::store_as(b_data, bb, xsimd::aligned_mode());
+        INFO(name, " batch_bool aligned");
+        CHECK_UNARY(std::accumulate(b_data, b_data + size, true, std::logical_and<bool>()));
+
+        delete[] b_data;
     }
 
     template <class T>
@@ -148,6 +169,15 @@ private:
         T v = T(1);
         batch_type expected(v);
         batch_type res = xsimd::broadcast<value_type>(v);
+        INFO(name);
+        CHECK_BATCH_EQ(res, expected);
+    }
+
+    void test_set_bool(const std::string& name)
+    {
+        bool v = true;
+        xsimd::batch_bool<uint8_t, arch_type> expected(v);
+        xsimd::batch_bool<uint8_t, arch_type> res = xsimd::broadcast(v);
         INFO(name);
         CHECK_BATCH_EQ(res, expected);
     }
