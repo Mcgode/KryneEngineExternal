@@ -1,7 +1,7 @@
 import lldb
 
 def __lldb_init_module(debugger, internal_dict):
-    def addSummary(type_name, summary_name, templated=True):
+    def add_summary(type_name, summary_name, templated=True):
         command = None
         if templated:
             command = f'type summary add -x "^{type_name}(( )?&)?$" -F {__name__}.{summary_name} -w eastl'
@@ -9,7 +9,7 @@ def __lldb_init_module(debugger, internal_dict):
             command = f'type synthetic add {type_name} -F {__name__}.{summary_name} -w eastl'
         debugger.HandleCommand(command)
 
-    def addSytheticChildrenProvider(type_name, provider_name, templated=True):
+    def add_synthetic_children_provider(type_name, provider_name, templated=True):
         command = None
         if templated:
             command = f'type synthetic add -x "^{type_name}(( )?&)?$" --python-class {__name__}.{provider_name} -w eastl'
@@ -17,20 +17,20 @@ def __lldb_init_module(debugger, internal_dict):
             command = f'type synthetic add {type_name} --python-class {__name__}.{provider_name} -w eastl'
         debugger.HandleCommand(command)
 
-    addSummary("eastl::unique_ptr<.*>", unique_ptr_summary.__name__)
-    addSytheticChildrenProvider("eastl::unique_ptr<.*>", UniquePtrChildrenProvider.__name__)
+    add_summary("eastl::unique_ptr<.*>", unique_ptr_summary.__name__)
+    add_synthetic_children_provider("eastl::unique_ptr<.*>", UniquePtrChildrenProvider.__name__)
 
-    addSummary("eastl::basic_string<.*>", basic_string_summary.__name__)
-    addSytheticChildrenProvider("eastl::basic_string<.*>", BasicStringChildrenProvider.__name__)
+    add_summary("eastl::basic_string<.*>", basic_string_summary.__name__)
+    add_synthetic_children_provider("eastl::basic_string<.*>", BasicStringChildrenProvider.__name__)
 
-    addSummary("eastl::VectorBase<.*>", vector_base_summary.__name__)
-    addSytheticChildrenProvider("eastl::VectorBase<.*>", VectorBaseChildrenProvider.__name__)
-    addSummary("eastl::vector<.*>", vector_base_summary.__name__)
-    addSytheticChildrenProvider("eastl::vector<.*>", VectorBaseChildrenProvider.__name__)
-    addSummary("eastl::fixed_vector<.*>", vector_base_summary.__name__)
-    addSytheticChildrenProvider("eastl::fixed_vector<.*>", VectorBaseChildrenProvider.__name__)
+    add_summary("eastl::VectorBase<.*>", vector_base_summary.__name__)
+    add_synthetic_children_provider("eastl::VectorBase<.*>", VectorBaseChildrenProvider.__name__)
+    add_summary("eastl::vector<.*>", vector_base_summary.__name__)
+    add_synthetic_children_provider("eastl::vector<.*>", VectorBaseChildrenProvider.__name__)
+    add_summary("eastl::fixed_vector<.*>", vector_base_summary.__name__)
+    add_synthetic_children_provider("eastl::fixed_vector<.*>", VectorBaseChildrenProvider.__name__)
 
-    addSummary("eastl::function<.*>", function_summary.__name__)
+    add_summary("eastl::function<.*>", function_summary.__name__)
 
     debugger.HandleCommand("type category enable eastl")
 
