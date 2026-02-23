@@ -92,7 +92,7 @@ endif ()
 # Set up tracy
 set(TRACY_ENABLE ON CACHE BOOL "Enable tracy" FORCE)
 set(TRACY_FIBERS ON CACHE BOOL "Enable tracy fibers" FORCE)
-add_subdirectory(tracy-0.11.0)
+add_subdirectory(tracy-0.13.1)
 set_target_properties(TracyClient PROPERTIES FOLDER "External")
 
 # Set up Google Test
