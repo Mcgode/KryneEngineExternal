@@ -22,6 +22,7 @@ def __lldb_init_module(debugger, internal_dict):
 
     add_summary("eastl::basic_string<.*>", basic_string_summary.__name__)
     add_synthetic_children_provider("eastl::basic_string<.*>", BasicStringChildrenProvider.__name__)
+    add_summary("eastl::basic_string_view<.*>", basic_string_view_summary.__name__)
 
     add_summary("eastl::VectorBase<.*>", vector_base_summary.__name__)
     add_synthetic_children_provider("eastl::VectorBase<.*>", VectorBaseChildrenProvider.__name__)
@@ -101,6 +102,28 @@ class BasicStringChildrenProvider:
             return self.value_object.EvaluateExpression("capacity()").Clone("[capacity]")
         if index == 2:
             return self.value_object.EvaluateExpression("c_str()").Clone("[value]")
+
+def basic_string_view_summary(value_object, internal_dict):
+    try:
+        data_ptr = value_object.GetChildMemberWithName("mpBegin")
+        count = value_object.GetChildMemberWithName("mnCount").GetValueAsUnsigned()
+
+        if not data_ptr.IsValid() or data_ptr.GetValueAsUnsigned() == 0 or count == 0:
+            return '""'
+
+        target = value_object.GetTarget()
+        process = target.GetProcess()
+
+        error = lldb.SBError()
+        string_data = process.ReadCStringFromMemory(data_ptr.GetValueAsUnsigned(), count + 1, error)
+
+        if error.Success():
+            text = string_data.replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n').replace('\t', '\\t')
+            return f'"{text}"'
+        else:
+            return f'"<read error: {error.GetCString()}>"'
+    except Exception as e:
+        return f'"<error: {str(e)}>"'
 
 def vector_base_summary(value_object, internal_dict):
     count = value_object.GetChildMemberWithName("[size]").GetValueAsUnsigned()
