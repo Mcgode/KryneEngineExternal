@@ -130,3 +130,6 @@ endif ()
 
 #Set up WinPixEventRuntime
 add_subdirectory(WinPixEventRuntime)
+
+# Set up zstd lib
+add_subdirectory(zstd-1.5.7)
