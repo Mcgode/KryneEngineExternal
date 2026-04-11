@@ -4,13 +4,6 @@ set(EASTL_ROOT_DIR "${PROJECT_SOURCE_DIR}/external-libs/eastl")
 
 message(STATUS "Setting up EASTL")
 
-set(EASTL_INCLUDE_DIRS
-        "${EASTL_ROOT_DIR}/test/packages/EAAssert/include"
-        "${EASTL_ROOT_DIR}/test/packages/EABase/include/Common"
-        "${EASTL_ROOT_DIR}/test/packages/EAMain/include"
-        "${EASTL_ROOT_DIR}/test/packages/EAStdC/include"
-        "${EASTL_ROOT_DIR}/test/packages/EATest/include"
-        "${EASTL_ROOT_DIR}/test/packages/EAThread/include")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/eastl/scripts/CMake")
 
 add_subdirectory(./eastl)
@@ -32,7 +25,7 @@ set_property(TARGET EAStdC PROPERTY Type "External")
 target_include_directories(EAStdC PUBLIC ${EASTL_INCLUDE_DIRS})
 #SetTargetFlags(EAStdC)
 
-target_link_libraries(EASTL EAStdC EAAssert EAThread)
+target_link_libraries(EASTL EAStdC)
 
 set_target_properties(EAStdC PROPERTIES FOLDER "External")
 set_target_properties(EAAssert PROPERTIES FOLDER "External")
