@@ -6,30 +6,15 @@ message(STATUS "Setting up EASTL")
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/eastl/scripts/CMake")
 
-add_subdirectory(./eastl)
+set(EASTL_DISABLE_APRIL_2024_DEPRECATIONS ON)
+set(EASTL_DISABLE_SEPT_2024_DEPRECATIONS ON)
+set(EASTL_DISABLE_APRIL_2025_DEPRECATIONS ON)
+add_subdirectory(eastl-3.27.01)
 set_property(TARGET EASTL PROPERTY Type "External")
-#SetTargetFlags(EASTL)
+target_include_directories(EASTL PUBLIC eastl-3.27.01/include)
 
-add_subdirectory(./eastl/test/packages/EAAssert)
-set_property(TARGET EAAssert PROPERTY Type "External")
-target_include_directories(EAAssert PUBLIC ${EASTL_INCLUDE_DIRS})
-#SetTargetFlags(EAAssert)
+target_sources(EASTL PRIVATE eastl-3.27.01/ext/vnsprintf.cpp)
 
-add_subdirectory(./eastl/test/packages/EAThread)
-set_property(TARGET EAThread PROPERTY Type "External")
-target_include_directories(EAThread PUBLIC ${EASTL_INCLUDE_DIRS})
-#SetTargetFlags(EAThread)
-
-add_subdirectory(./eastl/test/packages/EAStdC)
-set_property(TARGET EAStdC PROPERTY Type "External")
-target_include_directories(EAStdC PUBLIC ${EASTL_INCLUDE_DIRS})
-#SetTargetFlags(EAStdC)
-
-target_link_libraries(EASTL EAStdC)
-
-set_target_properties(EAStdC PROPERTIES FOLDER "External")
-set_target_properties(EAAssert PROPERTIES FOLDER "External")
-set_target_properties(EAThread PROPERTIES FOLDER "External")
 set_target_properties(EASTL PROPERTIES FOLDER "External")
 
 
