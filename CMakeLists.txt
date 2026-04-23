@@ -1,20 +1,9 @@
 
 #Set up EASTL
-set(EASTL_ROOT_DIR "${PROJECT_SOURCE_DIR}/external-libs/eastl")
-
-message(STATUS "Setting up EASTL")
-
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/eastl/scripts/CMake")
-
-set(EASTL_DISABLE_APRIL_2024_DEPRECATIONS ON)
-set(EASTL_DISABLE_SEPT_2024_DEPRECATIONS ON)
-set(EASTL_DISABLE_APRIL_2025_DEPRECATIONS ON)
-add_subdirectory(eastl-3.27.01)
-set_property(TARGET EASTL PROPERTY Type "External")
-target_include_directories(EASTL PUBLIC eastl-3.27.01/include)
-
-target_sources(EASTL PRIVATE eastl-3.27.01/ext/vnsprintf.cpp)
-
+add_subdirectory(EASTL)
+set_target_properties(EABase PROPERTIES Type "External")
+set_target_properties(EABase PROPERTIES FOLDER "External")
+set_target_properties(EASTL PROPERTIES Type "External")
 set_target_properties(EASTL PROPERTIES FOLDER "External")
 
 
