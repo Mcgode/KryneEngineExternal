@@ -79,9 +79,6 @@ if (GraphicsApi STREQUAL "MTL")
     add_subdirectory(metal-cpp-extensions)
 endif ()
 
-# Set up xsimd
-add_subdirectory(xsimd)
-
 #Set up WinPixEventRuntime
 add_subdirectory(WinPixEventRuntime)
 
