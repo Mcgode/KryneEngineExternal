@@ -417,7 +417,7 @@
 					// (/proc/$PID/task/$TID/comm on newer kernels, /proc/$PID/task/$TID/stat's second field 
 					// on older kernels), and hence distinguish which thread might be responsible for the high 
 					// CPU load or similar problems.
-					char8_t nameBuf[16]; // Limited to 16 bytes, null terminated if < 16 bytes
+					char nameBuf[16]; // Limited to 16 bytes, null terminated if < 16 bytes
 					strncpy(nameBuf, pName, sizeof(nameBuf));
 					nameBuf[15] = 0;
 					prctl(PR_SET_NAME, (unsigned long)nameBuf, 0, 0, 0);
