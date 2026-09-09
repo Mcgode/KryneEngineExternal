@@ -4,5 +4,9 @@
 *.so filter=lfs diff=lfs merge=lfs -text
 *.dylib filter=lfs diff=lfs merge=lfs -text
 DirectXCompiler/macos/bin/dxc filter=lfs diff=lfs merge=lfs -text
-DirectXCompiler/linux/bin/dxc filter=lfs diff=lfs merge=lfs -text
+DirectXCompiler/linux/arm64/bin/dxc filter=lfs diff=lfs merge=lfs -text
+DirectXCompiler/linux/arm64/lib/libdxcompiler.so filter=lfs diff=lfs merge=lfs -text
+DirectXCompiler/linux/x64/bin/dxc filter=lfs diff=lfs merge=lfs -text
+DirectXCompiler/linux/x64/lib/libdxcompiler.so filter=lfs diff=lfs merge=lfs -text
+DirectXCompiler/linux/x64/lib/libdxil.so filter=lfs diff=lfs merge=lfs -text
 spirv-cross/macos/bin/spirv-cross filter=lfs diff=lfs merge=lfs -text
