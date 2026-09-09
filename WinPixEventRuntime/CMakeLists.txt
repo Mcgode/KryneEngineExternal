@@ -1,10 +1,12 @@
 project(WinPixEventRuntime)
 
 if (WIN32)
-    if (CMAKE_SYSTEM_PROCESSOR MATCHES "AMD64")
+    if (CMAKE_SYSTEM_PROCESSOR MATCHES "AMD64" OR CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
         set(ARCH "x64")
     elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "ARM64")
         set(ARCH "ARM64")
+    else ()
+        message(FATAL_ERROR "Unsupported architecture ${CMAKE_SYSTEM_PROCESSOR}")
     endif ()
 
     add_library(WinPixEventRuntime SHARED IMPORTED GLOBAL)
