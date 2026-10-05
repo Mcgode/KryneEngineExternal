@@ -25,15 +25,24 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+option(DXHEADERS_BUILD_COM_ATL "Build using ATL CComPtr" OFF)
+
 set(TEST_EXES DirectX-Headers-Test DirectX-Headers-Check-Feature-Support-Test)
 
 add_executable(DirectX-Headers-Test test.cpp)
-
+add_test(NAME DirectX-Headers-Test COMMAND DirectX-Headers-Test)
 add_executable(DirectX-Headers-Check-Feature-Support-Test feature_check_test.cpp)
+add_test(NAME DirectX-Headers-Check-Feature-Support-Test COMMAND DirectX-Headers-Check-Feature-Support-Test)
 
 foreach(t IN LISTS TEST_EXES)
   target_link_libraries(${t} DirectX-Headers DirectX-Guids ${dxlibs})
 endforeach()
+
+if(DXHEADERS_BUILD_COM_ATL)
+  foreach(t IN LISTS TEST_EXES)
+    target_compile_definitions(${t} PRIVATE D3DX12_USE_ATL)
+  endforeach()
+endif()
 
 if ( CMAKE_CXX_COMPILER_ID MATCHES "Clang|IntelLLVM" )
     target_compile_options(DirectX-Headers-Check-Feature-Support-Test PRIVATE -Wno-unused-variable)
